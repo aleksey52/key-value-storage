@@ -14,7 +14,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class TaskService {
     private final StorageRepository storageRepository;
@@ -27,8 +26,8 @@ public class TaskService {
                 new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(storageEntry.getTtl())));
         scheduledFutureHashMap.put(storageEntry.getKey(), scheduledFuture);
         threadPoolTaskScheduler.schedule(() -> {
-            if (scheduledFutureHashMap.get(storageEntry.getKey()) !=
-                    null && scheduledFutureHashMap.get(storageEntry.getKey()).isDone()) {
+            if (scheduledFutureHashMap.get(storageEntry.getKey()) != null
+                    && scheduledFutureHashMap.get(storageEntry.getKey()).isDone()) {
                 scheduledFutureHashMap.remove(storageEntry.getKey());
             }
         }, new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(storageEntry.getTtl())));

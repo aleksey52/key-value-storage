@@ -25,21 +25,21 @@ public class StorageServiceImpl implements StorageService {
     private final StorageRepository storageRepository;
     private final Environment environment;
     private final TaskService taskService;
-
-    private final Integer DEFAULT_TTL = 60;
+    private static final Integer DEFAULT_TTL = 60;
 
     @Override
     public StorageEntry findByKey(String key) {
-        return storageRepository.findByKey(key).orElseThrow(StorageEntryNotFoundException::new);
+        return storageRepository.findByKey(key).orElseThrow(() ->
+                new StorageEntryNotFoundException("Storage entry with the specified key not found!"));
     }
 
     @Override
     public StorageEntry save(StorageEntry storageEntry) {
-        if (storageEntry == null ||
-                storageEntry.getKey() == null ||
-                storageEntry.getValue() == null ||
-                storageEntry.getKey().isEmpty() ||
-                storageEntry.getValue().isEmpty()) {
+        if (storageEntry == null
+                || storageEntry.getKey() == null
+                || storageEntry.getValue() == null
+                || storageEntry.getKey().isEmpty()
+                || storageEntry.getValue().isEmpty()) {
             throw new StorageEntryIllegalArgumentException("Illegal arguments when creating a storage entry");
         }
 
@@ -48,10 +48,8 @@ public class StorageServiceImpl implements StorageService {
         }
         StorageEntry pastEntry = storageRepository.save(storageEntry);
         if (pastEntry == null) {
-            log.warn("prevEntry is NULL");
             taskService.addTask(storageEntry);
         } else {
-            log.warn("prevEntry is NOT NULL");
             taskService.updateTask(storageEntry);
         }
 
@@ -60,7 +58,7 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public Boolean delete(String key) {
-        storageRepository.findByKey(key).orElseThrow(StorageEntryNotFoundException::new);
+        findByKey(key);
         taskService.deleteTask(key);
 
         return storageRepository.delete(key);

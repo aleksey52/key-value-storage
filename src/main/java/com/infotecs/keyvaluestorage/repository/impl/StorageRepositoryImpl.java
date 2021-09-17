@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class StorageRepositoryImpl implements StorageRepository {
     private final HashMap<String, StorageEntry> keyValueStorage = new HashMap<>();
 
@@ -22,7 +21,6 @@ public class StorageRepositoryImpl implements StorageRepository {
 
     @Override
     public StorageEntry save(StorageEntry storageEntry) {
-        log.warn("Save or Update entry with key: {}", storageEntry.getKey());
         return keyValueStorage.put(storageEntry.getKey(), storageEntry);
     }
 
