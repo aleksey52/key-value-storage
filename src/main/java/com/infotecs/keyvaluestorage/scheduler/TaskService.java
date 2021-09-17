@@ -22,30 +22,16 @@ public class TaskService {
     private final HashMap<String, ScheduledFuture<?>> scheduledFutureHashMap = new HashMap<>();
 
     public void addTask(StorageEntry storageEntry) {
-        log.warn("start adding task");
-        log.warn("pull size: " +
-                String.valueOf(threadPoolTaskScheduler.getScheduledThreadPoolExecutor().getQueue().size()));
         ScheduledFuture<?> scheduledFuture = threadPoolTaskScheduler.schedule(
                 new Task(storageRepository, storageEntry.getKey()),
                 new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(storageEntry.getTtl())));
         scheduledFutureHashMap.put(storageEntry.getKey(), scheduledFuture);
         threadPoolTaskScheduler.schedule(() -> {
-            log.error("START DELETING FROM HELPFUL HASHMAP");
-            log.warn("WITH key: {}", storageEntry.getKey());
-            log.warn("удаляемый элемент мапы: {}", scheduledFutureHashMap.get(storageEntry.getKey()));
             if (scheduledFutureHashMap.get(storageEntry.getKey()) !=
                     null && scheduledFutureHashMap.get(storageEntry.getKey()).isDone()) {
                 scheduledFutureHashMap.remove(storageEntry.getKey());
             }
-            log.warn("текущий размер вспомогательной мапы: {}", scheduledFutureHashMap.size());
-            log.warn("текущее состояние вспомогательной мапы: {}", scheduledFutureHashMap);
-            log.warn("текущий размер основной мапы: {}", storageRepository.findAll().size());
-            log.warn("текущее состояние основной мапы: {}", storageRepository.findAll());
         }, new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(storageEntry.getTtl())));
-        log.warn("ending");
-        log.warn("pull size: " +
-                String.valueOf(threadPoolTaskScheduler.getScheduledThreadPoolExecutor().getQueue().size()));
-        log.warn("end add");
     }
 
     public void updateTask(StorageEntry storageEntry) {
@@ -54,15 +40,9 @@ public class TaskService {
     }
 
     public void deleteTask(String key) {
-        log.warn("START CANCEL TASK");
-        log.warn(String.valueOf(threadPoolTaskScheduler.getScheduledThreadPoolExecutor().getQueue().size()));
         if (scheduledFutureHashMap.get(key) != null && !scheduledFutureHashMap.get(key).isDone()) {
-            log.warn("я попал в удаление");
             scheduledFutureHashMap.get(key).cancel(false);
         }
-        log.warn("CANCELED");
-        log.warn(String.valueOf(threadPoolTaskScheduler.getScheduledThreadPoolExecutor().getQueue().size()));
-        log.warn("STOP CANCEL");
     }
 
     public void deleteAllTasks() {

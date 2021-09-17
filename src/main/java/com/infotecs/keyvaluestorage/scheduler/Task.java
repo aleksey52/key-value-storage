@@ -24,9 +24,6 @@ public class Task implements Runnable {
 
     @Override
     public void run() {
-        log.error("Start task with key: {}", key);
         storageRepository.delete(key);
-        log.warn("текущее состояние основной мапы: {}", storageRepository.findAll());
-        log.error("End task with key: {}", key);
     }
 }
