@@ -7,8 +7,12 @@ import java.io.IOException;
 
 public interface StorageService {
     StorageEntry findByKey(String key);
+
     StorageEntry save(StorageEntry storageEntry);
+
     Boolean delete(String key);
+
     void createDump();
+
     void loadDump();
 }

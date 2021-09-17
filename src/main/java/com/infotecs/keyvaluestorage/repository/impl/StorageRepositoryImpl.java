@@ -3,9 +3,7 @@ package com.infotecs.keyvaluestorage.repository.impl;
 import com.infotecs.keyvaluestorage.model.StorageEntry;
 import com.infotecs.keyvaluestorage.repository.StorageRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

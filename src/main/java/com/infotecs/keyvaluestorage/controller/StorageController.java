@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-
 @RestController
 @RequestMapping("/storage/api")
 public class StorageController {
@@ -36,13 +34,13 @@ public class StorageController {
     }
 
     @PostMapping("/dump")
-    public ResponseEntity<?> createDump(){
+    public ResponseEntity<?> createDump() {
         storageService.createDump();
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/load")
-    public ResponseEntity<?> loadDump(){
+    public ResponseEntity<?> loadDump() {
         storageService.loadDump();
         return new ResponseEntity<>(HttpStatus.OK);
     }

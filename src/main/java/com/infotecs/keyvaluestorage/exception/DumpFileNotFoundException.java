@@ -4,20 +4,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class StorageEntryNotFoundException extends RuntimeException {
-    public StorageEntryNotFoundException() {
+public class DumpFileNotFoundException extends RuntimeException {
+    public DumpFileNotFoundException() {
         super();
     }
 
-    public StorageEntryNotFoundException(String message, Throwable cause) {
+    public DumpFileNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public StorageEntryNotFoundException(String message) {
+    public DumpFileNotFoundException(String message) {
         super(message);
     }
 
-    public StorageEntryNotFoundException(Throwable cause) {
+    public DumpFileNotFoundException(Throwable cause) {
         super(cause);
     }
 }

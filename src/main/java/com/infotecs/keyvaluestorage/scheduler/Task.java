@@ -4,7 +4,6 @@ import com.infotecs.keyvaluestorage.repository.StorageRepository;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 @Getter

@@ -1,5 +1,6 @@
 package com.infotecs.keyvaluestorage.service.impl;
 
+import com.infotecs.keyvaluestorage.exception.DumpFileNotFoundException;
 import com.infotecs.keyvaluestorage.exception.FailedOperationWithDumpFileException;
 import com.infotecs.keyvaluestorage.exception.StorageEntryIllegalArgumentException;
 import com.infotecs.keyvaluestorage.exception.StorageEntryNotFoundException;
@@ -76,7 +77,7 @@ public class StorageServiceImpl implements StorageService {
                     new FileOutputStream(Objects.requireNonNull(environment.getProperty("dumpfile"))));
             os.writeObject(storageRepository.findAll());
         } catch (IOException e) {
-            throw new FailedOperationWithDumpFileException();
+            throw new FailedOperationWithDumpFileException("Dump file creation error");
         }
 
     }
@@ -88,8 +89,10 @@ public class StorageServiceImpl implements StorageService {
         try (ObjectInputStream is = new ObjectInputStream(
                 new FileInputStream(Objects.requireNonNull(environment.getProperty("dumpfile"))))) {
             storageRepository.saveAll((HashMap<String, StorageEntry>) is.readObject());
-        } catch (IOException | ClassNotFoundException e) { // FILE NOT FOUND EXCEPTION IN IO
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            throw new DumpFileNotFoundException("Dump file not found!");
+        } catch (IOException | ClassNotFoundException e) {
+            throw new FailedOperationWithDumpFileException("Dump file loading error");
         }
 
         for (Map.Entry<String, StorageEntry> entry : storageRepository.findAll().entrySet()) {
