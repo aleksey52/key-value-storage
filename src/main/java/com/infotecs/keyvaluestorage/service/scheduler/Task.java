@@ -1,10 +1,9 @@
-package com.infotecs.keyvaluestorage.scheduler;
+package com.infotecs.keyvaluestorage.service.scheduler;
 
 import com.infotecs.keyvaluestorage.repository.StorageRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 @AllArgsConstructor
 @Getter

@@ -1,9 +1,8 @@
-package com.infotecs.keyvaluestorage.scheduler;
+package com.infotecs.keyvaluestorage.service.scheduler;
 
 import com.infotecs.keyvaluestorage.model.StorageEntry;
 import com.infotecs.keyvaluestorage.repository.StorageRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Service;
 

@@ -6,10 +6,9 @@ import com.infotecs.keyvaluestorage.exception.StorageEntryIllegalArgumentExcepti
 import com.infotecs.keyvaluestorage.exception.StorageEntryNotFoundException;
 import com.infotecs.keyvaluestorage.model.StorageEntry;
 import com.infotecs.keyvaluestorage.repository.StorageRepository;
-import com.infotecs.keyvaluestorage.scheduler.TaskService;
+import com.infotecs.keyvaluestorage.service.scheduler.TaskService;
 import com.infotecs.keyvaluestorage.service.StorageService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,6 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class StorageServiceImpl implements StorageService {
     private final StorageRepository storageRepository;
     private final Environment environment;

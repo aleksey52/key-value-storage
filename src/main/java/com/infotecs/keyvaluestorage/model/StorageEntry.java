@@ -9,6 +9,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode
 public class StorageEntry implements Serializable {
     private String key;
     private JSONObject value;
