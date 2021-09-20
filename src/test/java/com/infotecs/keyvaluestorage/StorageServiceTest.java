@@ -32,8 +32,6 @@ public class StorageServiceTest {
     @Mock
     MockEnvironment environment;
 
-    StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
-
     JSONObject value_1 = new JSONObject(Map.of("value_part_1", 1, "value_part_2", "qwerty"));
     StorageEntry entry_1 = new StorageEntry("key1", value_1, null);
 
@@ -43,6 +41,7 @@ public class StorageServiceTest {
     @Test
     public void getEntryByKey_success() {
         Mockito.when(storageRepository.findByKey(entry_1.getKey())).thenReturn(java.util.Optional.of(entry_1));
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
         StorageEntry resultingEntry = storageService.findByKey(entry_1.getKey());
 
         assertNotNull(resultingEntry);
@@ -54,6 +53,7 @@ public class StorageServiceTest {
     @Test
     public void getEntryByKey_notFound() {
         Mockito.when(storageRepository.findByKey(entry_1.getKey())).thenReturn(java.util.Optional.empty());
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
 
         try {
             storageService.findByKey(entry_1.getKey());
@@ -67,6 +67,7 @@ public class StorageServiceTest {
     public void setEntryByKey_success() {
         Mockito.when(storageRepository.save(entry_2)).thenReturn(null);
         Mockito.when(storageRepository.findByKey(entry_2.getKey())).thenReturn(java.util.Optional.of(entry_2));
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
         StorageEntry resultingEntry = storageService.save(entry_2);
 
         assertNotNull(resultingEntry);
@@ -81,6 +82,7 @@ public class StorageServiceTest {
         entry.setKey(null);
         Mockito.when(storageRepository.save(entry)).thenReturn(null);
         Mockito.when(storageRepository.findByKey(entry.getKey())).thenReturn(java.util.Optional.of(entry));
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
 
         try {
             storageService.save(entry);
@@ -96,6 +98,7 @@ public class StorageServiceTest {
         entry.setKey("  ");
         Mockito.when(storageRepository.save(entry)).thenReturn(null);
         Mockito.when(storageRepository.findByKey(entry.getKey())).thenReturn(java.util.Optional.of(entry));
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
 
         try {
             storageService.save(entry);
@@ -108,15 +111,20 @@ public class StorageServiceTest {
     @Test
     public void removeEntryByKey_success() {
         Mockito.when(storageRepository.findByKey(entry_1.getKey())).thenReturn(java.util.Optional.of(entry_1));
-        Mockito.when(storageRepository.delete(entry_1.getKey())).thenReturn(true);
-        Boolean result = storageService.delete(entry_1.getKey());
+        Mockito.when(storageRepository.delete(entry_1.getKey())).thenReturn(entry_1);
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
+        StorageEntry removeEntry = storageService.delete(entry_1.getKey());
 
-        assertTrue(result);
+        assertNotNull(removeEntry);
+        assertEquals(removeEntry.getKey(), entry_1.getKey());
+        assertEquals(removeEntry.getValue(), entry_1.getValue());
+        assertEquals(removeEntry.getTtl(), entry_1.getTtl());
     }
 
     @Test
     public void removeEntryByKey_notFound() {
         Mockito.when(storageRepository.findByKey(entry_1.getKey())).thenReturn(java.util.Optional.empty());
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
 
         try {
             storageService.delete(entry_1.getKey());
@@ -129,12 +137,14 @@ public class StorageServiceTest {
     @Test
     public void createDump_success() {
         Mockito.when(environment.getProperty("dumpfile")).thenReturn("src/main/resources/dump.txt");
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
         storageService.createDump();
     }
 
     @Test
     public void createDump_emptyFilepath() {
         Mockito.when(environment.getProperty("dumpfile")).thenReturn("");
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
 
         try {
             storageService.createDump();
@@ -147,12 +157,14 @@ public class StorageServiceTest {
     @Test
     public void loadDump_success() {
         Mockito.when(environment.getProperty("dumpfile")).thenReturn("src/main/resources/dump.txt");
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
         storageService.loadDump();
     }
 
     @Test
     public void loadDump_fail() {
         Mockito.when(environment.getProperty("dumpfile")).thenReturn("src/main/resources/unknown_file.txt");
+        StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
 
         try {
             storageService.createDump();

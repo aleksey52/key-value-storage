@@ -70,11 +70,15 @@ public class StorageControllerTest {
 
     @Test
     public void removeEntryByKey_success() throws Exception {
-        Mockito.when(storageService.findByKey(entry_2.getKey())).thenReturn(entry_2);
+        Mockito.when(storageService.delete(entry_2.getKey())).thenReturn(entry_2);
 
         mockMvc.perform(MockMvcRequestBuilders
                 .delete("/storage/api/" + entry_2.getKey())
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.key", is(entry_2.getKey())))
+                .andExpect(jsonPath("$.value", is(value_2)))
+                .andExpect(jsonPath("$.ttl", is(entry_2.getTtl())));
     }
 }
