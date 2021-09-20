@@ -7,7 +7,7 @@ public interface StorageService {
 
     StorageEntry save(StorageEntry storageEntry);
 
-    Boolean delete(String key);
+    StorageEntry delete(String key);
 
     void createDump();
 

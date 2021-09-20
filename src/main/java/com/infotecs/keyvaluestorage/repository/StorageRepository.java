@@ -12,7 +12,7 @@ public interface StorageRepository {
 
     StorageEntry save(StorageEntry storageEntry);
 
-    Boolean delete(String key);
+    StorageEntry delete(String key);
 
     HashMap<String, StorageEntry> findAll();
 

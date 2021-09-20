@@ -28,9 +28,8 @@ public class StorageController {
     }
 
     @DeleteMapping("/{key}")
-    public ResponseEntity<?> removeByKey(@PathVariable("key") String key) {
-        storageService.delete(key);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<StorageEntry> removeByKey(@PathVariable("key") String key) {
+        return new ResponseEntity<>(storageService.delete(key), HttpStatus.OK);
     }
 
     @PostMapping("/dump")

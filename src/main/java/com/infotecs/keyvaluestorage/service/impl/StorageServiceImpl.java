@@ -58,7 +58,7 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public Boolean delete(String key) {
+    public StorageEntry delete(String key) {
         findByKey(key);
         taskService.deleteTask(key);
 

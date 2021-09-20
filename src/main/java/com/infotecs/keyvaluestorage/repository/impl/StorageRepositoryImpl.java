@@ -24,8 +24,8 @@ public class StorageRepositoryImpl implements StorageRepository {
     }
 
     @Override
-    public Boolean delete(String key) {
-        return keyValueStorage.remove(key) != null;
+    public StorageEntry delete(String key) {
+        return keyValueStorage.remove(key);
     }
 
     @Override
