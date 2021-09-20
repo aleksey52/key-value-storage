@@ -66,9 +66,9 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public void createDump() {
+    public File createDump() {
+        File dumpFile = new File(Objects.requireNonNull(environment.getProperty("dumpfile")));
         try {
-            File dumpFile = new File(Objects.requireNonNull(environment.getProperty("dumpfile")));
             if (!dumpFile.exists()) {
                 dumpFile.createNewFile();
             }
@@ -79,14 +79,15 @@ public class StorageServiceImpl implements StorageService {
             throw new FailedOperationWithDumpFileException("Dump file creation error");
         }
 
+        return dumpFile;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void loadDump() {
+    public void loadDump(File dumpFile) {
         taskService.deleteAllTasks();
         try (ObjectInputStream is = new ObjectInputStream(
-                new FileInputStream(Objects.requireNonNull(environment.getProperty("dumpfile"))))) {
+                new FileInputStream(dumpFile))) {
             storageRepository.saveAll((HashMap<String, StorageEntry>) is.readObject());
         } catch (FileNotFoundException e) {
             throw new DumpFileNotFoundException("Dump file not found!");

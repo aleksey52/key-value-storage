@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.io.File;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
@@ -80,5 +81,33 @@ public class StorageControllerTest {
                 .andExpect(jsonPath("$.key", is(entry_2.getKey())))
                 .andExpect(jsonPath("$.value", is(value_2)))
                 .andExpect(jsonPath("$.ttl", is(entry_2.getTtl())));
+    }
+
+    @Test
+    public void createDump_success() throws Exception {
+        String dumpPath = "src\\main\\resources\\dump.txt";
+        File dumpFile = new File(dumpPath);
+        Mockito.when(storageService.createDump()).thenReturn(dumpFile);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/storage/api/dump")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$", is(dumpFile.getAbsolutePath())));
+    }
+
+    @Test
+    public void loadDump_success() throws Exception {
+        String dumpPath = "src\\main\\resources\\dump.txt";
+        File dumpFile = new File(dumpPath);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/storage/api/load")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.objectMapper.writeValueAsString(dumpFile));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk());
     }
 }

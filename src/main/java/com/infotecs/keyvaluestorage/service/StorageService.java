@@ -2,6 +2,8 @@ package com.infotecs.keyvaluestorage.service;
 
 import com.infotecs.keyvaluestorage.model.StorageEntry;
 
+import java.io.File;
+
 public interface StorageService {
     StorageEntry findByKey(String key);
 
@@ -9,7 +11,7 @@ public interface StorageService {
 
     StorageEntry delete(String key);
 
-    void createDump();
+    File createDump();
 
-    void loadDump();
+    void loadDump(File dumpFile);
 }

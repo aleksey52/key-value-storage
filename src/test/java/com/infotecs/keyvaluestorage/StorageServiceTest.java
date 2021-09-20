@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.env.MockEnvironment;
 
+import java.io.File;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -136,9 +137,13 @@ public class StorageServiceTest {
 
     @Test
     public void createDump_success() {
-        Mockito.when(environment.getProperty("dumpfile")).thenReturn("src/main/resources/dump.txt");
+        String dumpPath = "src\\main\\resources\\dump.txt";
+        Mockito.when(environment.getProperty("dumpfile")).thenReturn(dumpPath);
         StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
-        storageService.createDump();
+        File dump = storageService.createDump();
+
+        assertNotNull(dump);
+        assertEquals(dump.getPath(), dumpPath);
     }
 
     @Test
@@ -156,18 +161,20 @@ public class StorageServiceTest {
 
     @Test
     public void loadDump_success() {
-        Mockito.when(environment.getProperty("dumpfile")).thenReturn("src/main/resources/dump.txt");
+        String dumpPath = "src\\main\\resources\\dump.txt";
+        Mockito.when(environment.getProperty("dumpfile")).thenReturn(dumpPath);
         StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
-        storageService.loadDump();
+        storageService.loadDump(new File(dumpPath));
     }
 
     @Test
     public void loadDump_fail() {
-        Mockito.when(environment.getProperty("dumpfile")).thenReturn("src/main/resources/unknown_file.txt");
+        String dumpPath = "src\\main\\resources\\unknown_file.txt";
+        Mockito.when(environment.getProperty("dumpfile")).thenReturn(dumpPath);
         StorageService storageService = new StorageServiceImpl(storageRepository, environment, taskService);
 
         try {
-            storageService.createDump();
+            storageService.loadDump(new File(dumpPath));
         } catch (Exception e) {
             assertTrue(e instanceof DumpFileNotFoundException);
             assertEquals(e.getMessage(), "Dump file not found!");
