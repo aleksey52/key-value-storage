@@ -33,12 +33,15 @@ public class StorageServiceImpl implements StorageService {
 
     @Override
     public StorageEntry save(StorageEntry storageEntry) {
-        if (storageEntry == null
-                || storageEntry.getKey() == null
-                || storageEntry.getValue() == null
-                || storageEntry.getKey().isEmpty()
-                || storageEntry.getValue().isEmpty()) {
+        if (storageEntry == null || storageEntry.getKey() == null) {
             throw new StorageEntryIllegalArgumentException("Illegal arguments when creating a storage entry");
+        } else {
+            storageEntry.setKey(storageEntry.getKey().trim());
+            if (storageEntry.getValue() == null
+                    || storageEntry.getKey().isEmpty()
+                    || storageEntry.getValue().isEmpty()) {
+                throw new StorageEntryIllegalArgumentException("Illegal arguments when creating a storage entry");
+            }
         }
 
         if (storageEntry.getTtl() == null) {

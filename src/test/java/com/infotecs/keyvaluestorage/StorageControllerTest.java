@@ -69,24 +69,6 @@ public class StorageControllerTest {
     }
 
     @Test
-    public void setEntryWithExistingKey_success() throws Exception {
-        Mockito.when(storageService.findByKey(entry_1.getKey())).thenReturn(entry_1);
-        Mockito.when(storageService.save(entry_2)).thenReturn(entry_2);
-
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/storage/api")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(entry_2));
-
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.key", is(entry_2.getKey())))
-                .andExpect(jsonPath("$.value", is(value_2)))
-                .andExpect(jsonPath("$.ttl", is(entry_2.getTtl())));
-    }
-
-    @Test
     public void removeEntryByKey_success() throws Exception {
         Mockito.when(storageService.findByKey(entry_2.getKey())).thenReturn(entry_2);
 
