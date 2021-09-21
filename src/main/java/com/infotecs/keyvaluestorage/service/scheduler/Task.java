@@ -9,11 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Task implements Runnable {
-    private StorageRepository storageRepository;
-    private String key;
 
-    @Override
-    public void run() {
-        storageRepository.delete(key);
-    }
+  private StorageRepository storageRepository;
+  private String key;
+
+  @Override
+  public void run() {
+    storageRepository.delete(key);
+  }
 }

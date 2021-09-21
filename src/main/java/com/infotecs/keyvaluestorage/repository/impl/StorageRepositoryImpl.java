@@ -11,31 +11,32 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class StorageRepositoryImpl implements StorageRepository {
-    private final HashMap<String, StorageEntry> keyValueStorage = new HashMap<>();
 
-    @Override
-    public Optional<StorageEntry> findByKey(String key) {
-        return Optional.ofNullable(keyValueStorage.get(key));
-    }
+  private final HashMap<String, StorageEntry> keyValueStorage = new HashMap<>();
 
-    @Override
-    public StorageEntry save(StorageEntry storageEntry) {
-        return keyValueStorage.put(storageEntry.getKey(), storageEntry);
-    }
+  @Override
+  public Optional<StorageEntry> findByKey(String key) {
+    return Optional.ofNullable(keyValueStorage.get(key));
+  }
 
-    @Override
-    public StorageEntry delete(String key) {
-        return keyValueStorage.remove(key);
-    }
+  @Override
+  public StorageEntry save(StorageEntry storageEntry) {
+    return keyValueStorage.put(storageEntry.getKey(), storageEntry);
+  }
 
-    @Override
-    public HashMap<String, StorageEntry> findAll() {
-        return keyValueStorage;
-    }
+  @Override
+  public StorageEntry delete(String key) {
+    return keyValueStorage.remove(key);
+  }
 
-    @Override
-    public void saveAll(HashMap<String, StorageEntry> keyValueStorage) {
-        this.keyValueStorage.clear();
-        this.keyValueStorage.putAll(keyValueStorage);
-    }
+  @Override
+  public HashMap<String, StorageEntry> findAll() {
+    return keyValueStorage;
+  }
+
+  @Override
+  public void saveAll(HashMap<String, StorageEntry> keyValueStorage) {
+    this.keyValueStorage.clear();
+    this.keyValueStorage.putAll(keyValueStorage);
+  }
 }

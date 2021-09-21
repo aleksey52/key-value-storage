@@ -12,37 +12,39 @@ import java.io.File;
 @RestController
 @RequestMapping("/storage/api")
 public class StorageController {
-    private final StorageService storageService;
 
-    @Autowired
-    public StorageController(StorageService storageService) {
-        this.storageService = storageService;
-    }
+  private final StorageService storageService;
 
-    @GetMapping("/{key}")
-    public ResponseEntity<StorageEntry> getByKey(@PathVariable("key") String key) {
-        return new ResponseEntity<>(storageService.findByKey(key), HttpStatus.OK);
-    }
+  @Autowired
+  public StorageController(StorageService storageService) {
+    this.storageService = storageService;
+  }
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<StorageEntry> setByKey(@RequestBody(required = false) StorageEntry storageEntry) {
-        return new ResponseEntity<>(storageService.save(storageEntry), HttpStatus.OK);
-    }
+  @GetMapping("/{key}")
+  public ResponseEntity<StorageEntry> getByKey(@PathVariable("key") String key) {
+    return new ResponseEntity<>(storageService.findByKey(key), HttpStatus.OK);
+  }
 
-    @DeleteMapping("/{key}")
-    public ResponseEntity<StorageEntry> removeByKey(@PathVariable("key") String key) {
-        return new ResponseEntity<>(storageService.delete(key), HttpStatus.OK);
-    }
+  @PostMapping(consumes = "application/json", produces = "application/json")
+  public ResponseEntity<StorageEntry> setByKey(
+      @RequestBody(required = false) StorageEntry storageEntry) {
+    return new ResponseEntity<>(storageService.save(storageEntry), HttpStatus.OK);
+  }
 
-    @PostMapping("/dump")
-    public ResponseEntity<File> createDump() {
-        storageService.createDump();
-        return new ResponseEntity<>(storageService.createDump(), HttpStatus.OK);
-    }
+  @DeleteMapping("/{key}")
+  public ResponseEntity<StorageEntry> removeByKey(@PathVariable("key") String key) {
+    return new ResponseEntity<>(storageService.delete(key), HttpStatus.OK);
+  }
 
-    @PostMapping("/load")
-    public ResponseEntity<?> loadDump(@RequestBody File dumpFile) {
-        storageService.loadDump(dumpFile);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+  @PostMapping("/dump")
+  public ResponseEntity<File> createDump() {
+    storageService.createDump();
+    return new ResponseEntity<>(storageService.createDump(), HttpStatus.OK);
+  }
+
+  @PostMapping("/load")
+  public ResponseEntity<?> loadDump(@RequestBody File dumpFile) {
+    storageService.loadDump(dumpFile);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }

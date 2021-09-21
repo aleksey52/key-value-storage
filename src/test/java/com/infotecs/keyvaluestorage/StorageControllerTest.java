@@ -25,89 +25,90 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(StorageController.class)
 public class StorageControllerTest {
-    @Autowired
-    MockMvc mockMvc;
-    @Autowired
-    ObjectMapper objectMapper;
 
-    @MockBean
-    StorageService storageService;
+  @Autowired
+  MockMvc mockMvc;
+  @Autowired
+  ObjectMapper objectMapper;
 
-    JSONObject value_1 = new JSONObject(Map.of("value_part_1", 1, "value_part_2", "qwerty"));
-    StorageEntry entry_1 = new StorageEntry("key1", value_1, null);
+  @MockBean
+  StorageService storageService;
 
-    JSONObject value_2 = new JSONObject(Map.of("value_part_1", "AAA", "value_part_2", "1337"));
-    StorageEntry entry_2 = new StorageEntry("key2", value_2, 2);
+  JSONObject value_1 = new JSONObject(Map.of("value_part_1", 1, "value_part_2", "qwerty"));
+  StorageEntry entry_1 = new StorageEntry("key1", value_1, null);
 
-    @Test
-    public void getEntryByKey_success() throws Exception {
-        Mockito.when(storageService.findByKey(entry_1.getKey())).thenReturn(entry_1);
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/storage/api/" + entry_1.getKey())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.key", is(entry_1.getKey())))
-                .andExpect(jsonPath("$.value", is(value_1)))
-                .andExpect(jsonPath("$.ttl", is(entry_1.getTtl())));
-    }
+  JSONObject value_2 = new JSONObject(Map.of("value_part_1", "AAA", "value_part_2", "1337"));
+  StorageEntry entry_2 = new StorageEntry("key2", value_2, 2);
 
-    @Test
-    public void setEntryByKey_success() throws Exception {
-        Mockito.when(storageService.save(entry_1)).thenReturn(entry_1);
+  @Test
+  public void getEntryByKey_success() throws Exception {
+    Mockito.when(storageService.findByKey(entry_1.getKey())).thenReturn(entry_1);
+    mockMvc.perform(MockMvcRequestBuilders
+        .get("/storage/api/" + entry_1.getKey())
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", notNullValue()))
+        .andExpect(jsonPath("$.key", is(entry_1.getKey())))
+        .andExpect(jsonPath("$.value", is(value_1)))
+        .andExpect(jsonPath("$.ttl", is(entry_1.getTtl())));
+  }
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/storage/api")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(entry_1));
+  @Test
+  public void setEntryByKey_success() throws Exception {
+    Mockito.when(storageService.save(entry_1)).thenReturn(entry_1);
 
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.key", is(entry_1.getKey())))
-                .andExpect(jsonPath("$.value", is(value_1)))
-                .andExpect(jsonPath("$.ttl", is(entry_1.getTtl())));
-    }
+    MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/storage/api")
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .content(this.objectMapper.writeValueAsString(entry_1));
 
-    @Test
-    public void removeEntryByKey_success() throws Exception {
-        Mockito.when(storageService.delete(entry_2.getKey())).thenReturn(entry_2);
+    mockMvc.perform(mockRequest)
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", notNullValue()))
+        .andExpect(jsonPath("$.key", is(entry_1.getKey())))
+        .andExpect(jsonPath("$.value", is(value_1)))
+        .andExpect(jsonPath("$.ttl", is(entry_1.getTtl())));
+  }
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .delete("/storage/api/" + entry_2.getKey())
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$.key", is(entry_2.getKey())))
-                .andExpect(jsonPath("$.value", is(value_2)))
-                .andExpect(jsonPath("$.ttl", is(entry_2.getTtl())));
-    }
+  @Test
+  public void removeEntryByKey_success() throws Exception {
+    Mockito.when(storageService.delete(entry_2.getKey())).thenReturn(entry_2);
 
-    @Test
-    public void createDump_success() throws Exception {
-        String dumpPath = "src\\main\\resources\\dump.txt";
-        File dumpFile = new File(dumpPath);
-        Mockito.when(storageService.createDump()).thenReturn(dumpFile);
+    mockMvc.perform(MockMvcRequestBuilders
+        .delete("/storage/api/" + entry_2.getKey())
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", notNullValue()))
+        .andExpect(jsonPath("$.key", is(entry_2.getKey())))
+        .andExpect(jsonPath("$.value", is(value_2)))
+        .andExpect(jsonPath("$.ttl", is(entry_2.getTtl())));
+  }
 
-        mockMvc.perform(MockMvcRequestBuilders
-                .post("/storage/api/dump")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", notNullValue()))
-                .andExpect(jsonPath("$", is(dumpFile.getAbsolutePath())));
-    }
+  @Test
+  public void createDump_success() throws Exception {
+    String dumpPath = "src\\main\\resources\\dump.txt";
+    File dumpFile = new File(dumpPath);
+    Mockito.when(storageService.createDump()).thenReturn(dumpFile);
 
-    @Test
-    public void loadDump_success() throws Exception {
-        String dumpPath = "src\\main\\resources\\dump.txt";
-        File dumpFile = new File(dumpPath);
+    mockMvc.perform(MockMvcRequestBuilders
+        .post("/storage/api/dump")
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", notNullValue()))
+        .andExpect(jsonPath("$", is(dumpFile.getAbsolutePath())));
+  }
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/storage/api/load")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(this.objectMapper.writeValueAsString(dumpFile));
+  @Test
+  public void loadDump_success() throws Exception {
+    String dumpPath = "src\\main\\resources\\dump.txt";
+    File dumpFile = new File(dumpPath);
 
-        mockMvc.perform(mockRequest)
-                .andExpect(status().isOk());
-    }
+    MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/storage/api/load")
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .content(this.objectMapper.writeValueAsString(dumpFile));
+
+    mockMvc.perform(mockRequest)
+        .andExpect(status().isOk());
+  }
 }

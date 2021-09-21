@@ -11,7 +11,8 @@ import java.io.Serializable;
 @Setter
 @EqualsAndHashCode
 public class StorageEntry implements Serializable {
-    private String key;
-    private JSONObject value;
-    private Integer ttl;
+
+  private String key;
+  private JSONObject value;
+  private Integer ttl;
 }

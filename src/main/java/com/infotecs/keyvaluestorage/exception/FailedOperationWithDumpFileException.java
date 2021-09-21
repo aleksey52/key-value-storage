@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.CONFLICT)
 public class FailedOperationWithDumpFileException extends RuntimeException {
-    public FailedOperationWithDumpFileException(String message) {
-        super(message);
-    }
+
+  public FailedOperationWithDumpFileException(String message) {
+    super(message);
+  }
 }

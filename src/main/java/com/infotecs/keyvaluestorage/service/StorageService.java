@@ -5,13 +5,14 @@ import com.infotecs.keyvaluestorage.model.StorageEntry;
 import java.io.File;
 
 public interface StorageService {
-    StorageEntry findByKey(String key);
 
-    StorageEntry save(StorageEntry storageEntry);
+  StorageEntry findByKey(String key);
 
-    StorageEntry delete(String key);
+  StorageEntry save(StorageEntry storageEntry);
 
-    File createDump();
+  StorageEntry delete(String key);
 
-    void loadDump(File dumpFile);
+  File createDump();
+
+  void loadDump(File dumpFile);
 }

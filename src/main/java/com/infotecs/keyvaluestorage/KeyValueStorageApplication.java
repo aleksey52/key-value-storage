@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class KeyValueStorageApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(KeyValueStorageApplication.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(KeyValueStorageApplication.class, args);
+  }
 
 }

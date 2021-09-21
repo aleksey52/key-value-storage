@@ -8,13 +8,14 @@ import java.util.Optional;
 
 @Repository
 public interface StorageRepository {
-    Optional<StorageEntry> findByKey(String key);
 
-    StorageEntry save(StorageEntry storageEntry);
+  Optional<StorageEntry> findByKey(String key);
 
-    StorageEntry delete(String key);
+  StorageEntry save(StorageEntry storageEntry);
 
-    HashMap<String, StorageEntry> findAll();
+  StorageEntry delete(String key);
 
-    void saveAll(HashMap<String, StorageEntry> keyValueStorage);
+  HashMap<String, StorageEntry> findAll();
+
+  void saveAll(HashMap<String, StorageEntry> keyValueStorage);
 }
