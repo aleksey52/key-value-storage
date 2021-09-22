@@ -37,9 +37,8 @@ public class StorageController {
   }
 
   @PostMapping("/dump")
-  public ResponseEntity<File> createDump() {
-    storageService.createDump();
-    return new ResponseEntity<>(storageService.createDump(), HttpStatus.OK);
+  public ResponseEntity<File> createDump(@RequestBody String path) {
+    return new ResponseEntity<>(storageService.createDump(path), HttpStatus.OK);
   }
 
   @PostMapping("/load")

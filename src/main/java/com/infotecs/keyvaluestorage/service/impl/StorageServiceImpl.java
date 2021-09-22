@@ -6,23 +6,25 @@ import com.infotecs.keyvaluestorage.exception.StorageEntryIllegalArgumentExcepti
 import com.infotecs.keyvaluestorage.exception.StorageEntryNotFoundException;
 import com.infotecs.keyvaluestorage.model.StorageEntry;
 import com.infotecs.keyvaluestorage.repository.StorageRepository;
-import com.infotecs.keyvaluestorage.service.scheduler.TaskService;
 import com.infotecs.keyvaluestorage.service.StorageService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Service;
-
-import java.io.*;
+import com.infotecs.keyvaluestorage.service.scheduler.TaskService;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class StorageServiceImpl implements StorageService {
 
   private final StorageRepository storageRepository;
-  private final Environment environment;
   private final TaskService taskService;
   private static final Integer DEFAULT_TTL = 60;
 
@@ -69,14 +71,22 @@ public class StorageServiceImpl implements StorageService {
   }
 
   @Override
-  public File createDump() {
-    File dumpFile = new File(Objects.requireNonNull(environment.getProperty("dumpfile")));
+  public File createDump(String path) {
+    if (!path.trim().isEmpty()) {
+      if (path.substring(path.length() - 1).equals("/")
+          || path.substring(path.length() - 1).equals("\\")) {
+        path += "dump.txt";
+      } else {
+        path += "/dump.txt";
+      }
+    }
+    File dumpFile = new File(path);
     try {
       if (!dumpFile.exists()) {
         dumpFile.createNewFile();
       }
       ObjectOutputStream os = new ObjectOutputStream(
-          new FileOutputStream(Objects.requireNonNull(environment.getProperty("dumpfile"))));
+          new FileOutputStream(path));
       os.writeObject(storageRepository.findAll());
     } catch (IOException e) {
       throw new FailedOperationWithDumpFileException("Dump file creation error");

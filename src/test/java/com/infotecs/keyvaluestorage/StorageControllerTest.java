@@ -86,13 +86,18 @@ public class StorageControllerTest {
 
   @Test
   public void createDump_success() throws Exception {
-    String dumpPath = "src\\main\\resources\\dump.txt";
-    File dumpFile = new File(dumpPath);
-    Mockito.when(storageService.createDump()).thenReturn(dumpFile);
+    String path = "src\\main\\resources\\";
+    String filePath = "src\\main\\resources\\dump.txt";
+    File dumpFile = new File(filePath);
+    Mockito.when(storageService.createDump(path)).thenReturn(dumpFile);
 
-    mockMvc.perform(MockMvcRequestBuilders
+    MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
         .post("/storage/api/dump")
-        .contentType(MediaType.APPLICATION_JSON))
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .content(path);
+
+    mockMvc.perform(mockRequest)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$", notNullValue()))
         .andExpect(jsonPath("$", is(dumpFile.getAbsolutePath())));

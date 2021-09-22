@@ -12,7 +12,7 @@ public interface StorageService {
 
   StorageEntry delete(String key);
 
-  File createDump();
+  File createDump(String path);
 
   void loadDump(File dumpFile);
 }
