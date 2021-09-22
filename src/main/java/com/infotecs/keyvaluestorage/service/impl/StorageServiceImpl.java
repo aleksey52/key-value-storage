@@ -72,14 +72,6 @@ public class StorageServiceImpl implements StorageService {
 
   @Override
   public File createDump(String path) {
-    if (!path.trim().isEmpty()) {
-      if (path.substring(path.length() - 1).equals("/")
-          || path.substring(path.length() - 1).equals("\\")) {
-        path += "dump.txt";
-      } else {
-        path += "/dump.txt";
-      }
-    }
     File dumpFile = new File(path);
     try {
       if (!dumpFile.exists()) {
@@ -97,10 +89,10 @@ public class StorageServiceImpl implements StorageService {
 
   @Override
   @SuppressWarnings("unchecked")
-  public void loadDump(File dumpFile) {
+  public void loadDump(String path) {
     taskService.deleteAllTasks();
     try (ObjectInputStream is = new ObjectInputStream(
-        new FileInputStream(dumpFile))) {
+        new FileInputStream(path))) {
       storageRepository.saveAll((HashMap<String, StorageEntry>) is.readObject());
     } catch (FileNotFoundException e) {
       throw new DumpFileNotFoundException("Dump file not found!");

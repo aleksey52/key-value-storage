@@ -14,5 +14,5 @@ public interface StorageService {
 
   File createDump(String path);
 
-  void loadDump(File dumpFile);
+  void loadDump(String path);
 }

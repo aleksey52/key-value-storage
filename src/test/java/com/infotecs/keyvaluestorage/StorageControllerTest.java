@@ -2,6 +2,7 @@ package com.infotecs.keyvaluestorage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infotecs.keyvaluestorage.controller.StorageController;
+import com.infotecs.keyvaluestorage.model.DumpFile;
 import com.infotecs.keyvaluestorage.model.StorageEntry;
 import com.infotecs.keyvaluestorage.service.StorageService;
 import org.json.simple.JSONObject;
@@ -86,27 +87,26 @@ public class StorageControllerTest {
 
   @Test
   public void createDump_success() throws Exception {
-    String path = "src\\main\\resources\\";
     String filePath = "src\\main\\resources\\dump.txt";
-    File dumpFile = new File(filePath);
-    Mockito.when(storageService.createDump(path)).thenReturn(dumpFile);
+    File returningFile = new File(filePath);
+    DumpFile dumpFile = new DumpFile(filePath);
+    Mockito.when(storageService.createDump(filePath)).thenReturn(returningFile);
 
     MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
         .post("/storage/api/dump")
         .contentType(MediaType.APPLICATION_JSON)
         .accept(MediaType.APPLICATION_JSON)
-        .content(path);
+        .content(this.objectMapper.writeValueAsString(dumpFile));
 
     mockMvc.perform(mockRequest)
         .andExpect(status().isOk())
         .andExpect(jsonPath("$", notNullValue()))
-        .andExpect(jsonPath("$", is(dumpFile.getAbsolutePath())));
+        .andExpect(jsonPath("$.path", is(returningFile.getPath())));
   }
 
   @Test
   public void loadDump_success() throws Exception {
-    String dumpPath = "src\\main\\resources\\dump.txt";
-    File dumpFile = new File(dumpPath);
+    DumpFile dumpFile = new DumpFile("src\\main\\resources\\dump.txt");
 
     MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/storage/api/load")
         .contentType(MediaType.APPLICATION_JSON)

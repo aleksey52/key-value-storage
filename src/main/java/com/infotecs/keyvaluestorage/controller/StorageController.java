@@ -1,5 +1,6 @@
 package com.infotecs.keyvaluestorage.controller;
 
+import com.infotecs.keyvaluestorage.model.DumpFile;
 import com.infotecs.keyvaluestorage.model.StorageEntry;
 import com.infotecs.keyvaluestorage.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +38,14 @@ public class StorageController {
   }
 
   @PostMapping("/dump")
-  public ResponseEntity<File> createDump(@RequestBody String path) {
-    return new ResponseEntity<>(storageService.createDump(path), HttpStatus.OK);
+  public ResponseEntity<DumpFile> createDump(@RequestBody DumpFile dumpFile) {
+    dumpFile.setPath(storageService.createDump(dumpFile.getPath()).getPath());
+    return new ResponseEntity<>(dumpFile, HttpStatus.OK);
   }
 
   @PostMapping("/load")
-  public ResponseEntity<?> loadDump(@RequestBody File dumpFile) {
-    storageService.loadDump(dumpFile);
+  public ResponseEntity<?> loadDump(@RequestBody DumpFile dumpFile) {
+    storageService.loadDump(dumpFile.getPath());
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }
