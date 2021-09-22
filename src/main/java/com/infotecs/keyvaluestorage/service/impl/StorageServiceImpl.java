@@ -72,15 +72,16 @@ public class StorageServiceImpl implements StorageService {
 
   @Override
   public File createDump(String path) {
-    File dumpFile = new File(path);
+    File dumpFile;
     try {
+      dumpFile = new File(path);
       if (!dumpFile.exists()) {
         dumpFile.createNewFile();
       }
       ObjectOutputStream os = new ObjectOutputStream(
           new FileOutputStream(path));
       os.writeObject(storageRepository.findAll());
-    } catch (IOException e) {
+    } catch (IOException | NullPointerException e) {
       throw new FailedOperationWithDumpFileException("Dump file creation error");
     }
 
